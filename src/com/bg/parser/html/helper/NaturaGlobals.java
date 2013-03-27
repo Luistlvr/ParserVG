@@ -29,4 +29,14 @@ public class NaturaGlobals {
     
     public static final int ERROR_NOT_FOUND = 404;    
     public static final int ERROR_EXCEPTION = 500;  
+    
+    /*!< Database values */
+    public static final String DB_NAME     = "Natura";
+    public static final String DB_USERNAME = "root";
+    public static final String DB_PASSWORD = "9950135";
+    public static final String DB_URL   = "jdbc:mysql://localhost/";
+    
+    /*!< Facebook App info */
+    String fbSecretKey = "0b3efbfb0304e1f7f65b5ab0c429c26d";
+    String fbAppId = "231133880344940";
 }
