@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.bg.parser.db;
+package com.bg.parser.base;
 
  import java.sql.*;
 

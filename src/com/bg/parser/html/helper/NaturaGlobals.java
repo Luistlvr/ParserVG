@@ -37,6 +37,11 @@ public class NaturaGlobals {
     public static final String DB_URL   = "jdbc:mysql://localhost/";
     
     /*!< Facebook App info */
-    String fbSecretKey = "0b3efbfb0304e1f7f65b5ab0c429c26d";
-    String fbAppId = "231133880344940";
+    public static final String fbPageName = "naturanet";
+    public static final String fbSecretKey = "0b3efbfb0304e1f7f65b5ab0c429c26d";
+    public static final String fbAppId = "231133880344940";
+    
+    public static final int AMOUNT_OF_FEEDS    = 20;
+    public static final int AMOUNT_OF_COMMENTS = 20;
+    public static final int AMOUNT_OF_LIKES    = 20;
 }
