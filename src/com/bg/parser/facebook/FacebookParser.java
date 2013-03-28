@@ -6,6 +6,7 @@ package com.bg.parser.facebook;
 
 import com.bg.parser.base.Parser;
 import com.bg.parser.html.helper.NaturaGlobals;
+import com.restfb.Connection;
 import com.restfb.DefaultFacebookClient;
 import com.restfb.DefaultJsonMapper;
 import com.restfb.DefaultJsonMapper.JsonMappingErrorHandler;
@@ -15,6 +16,8 @@ import com.restfb.FacebookClient.AccessToken;
 import com.restfb.Parameter;
 import com.restfb.json.JsonArray;
 import com.restfb.json.JsonObject;
+import com.restfb.types.Post;
+import java.util.Date;
 
 /**
  *
@@ -34,6 +37,16 @@ public class FacebookParser implements Parser {
                     return true;
                 }
             }));
+    }
+    
+    public void getElementDaysAgo(long days) {
+        Date oneWeekAgo = new Date(System.currentTimeMillis() - 1000L * 60L * 60L * 24L * days);
+
+        Connection<Post> filteredFeed = facebookClient.fetchConnection(NaturaGlobals.fbPageName + "/feed", Post.class,
+                Parameter.with("limit", NaturaGlobals.AMOUNT_OF_FILTER), Parameter.with("until", "yesterday"),
+                Parameter.with("since", oneWeekAgo));
+
+        System.out.println("Filtered feed count: " + filteredFeed.getData().size());
     }
     
     @Override
