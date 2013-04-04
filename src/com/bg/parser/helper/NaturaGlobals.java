@@ -45,4 +45,7 @@ public class NaturaGlobals {
     public static final int AMOUNT_OF_COMMENTS = 20;
     public static final int AMOUNT_OF_LIKES    = 20;
     public static final int AMOUNT_OF_FILTER   = 20;
+    
+    /*!< StopWords */
+    public static final String URL_STOPWORDS = "resources/stopwords";
 }
