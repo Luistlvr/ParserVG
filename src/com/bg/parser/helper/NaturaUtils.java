@@ -95,7 +95,7 @@ public class NaturaUtils {
         List<String> textWithoutStopwords = new ArrayList<>();  
         
         for(int i = 0; i < text.length; ++i) {
-            if(!isStopword(text[i]))
+            if(!isStopword(cleanWords(text[i])))
                 textWithoutStopwords.add(text[i]);
         }
         return textWithoutStopwords.toArray(new String[textWithoutStopwords.size()]);
@@ -125,6 +125,24 @@ public class NaturaUtils {
             System.out.print(word + " ");
         }
         System.out.println("\n");
+    }
+    
+    private String cleanWords(String word) {
+        String temp = ""; 
+        
+        for(int i = 0; i < word.length(); i++) {
+            if(word.charAt(i) == '(' || word.charAt(i) == ')' || word.charAt(i) == '[' ||
+               word.charAt(i) == ']' || word.charAt(i) == '{' || word.charAt(i) == '}' ||
+               word.charAt(i) == ',' || word.charAt(i) == '.' || word.charAt(i) == ';' ||
+               word.charAt(i) == ':' || word.charAt(i) == '?' || word.charAt(i) == '¿' ||
+               word.charAt(i) == '¡' || word.charAt(i) == '!' || word.charAt(i) == '"' ||
+               word.charAt(i) == '-' || word.charAt(i) == '_' || word.charAt(i) == '>' ||
+               word.charAt(i) == '<' || word.charAt(i) == '/' || word.charAt(i) == '$' ||
+               word.charAt(i) == '%' || word.charAt(i) == '@' || word.charAt(i) == '#');
+            else
+               temp += word.charAt(i);            
+        }
+        return temp;
     }
     
     /**
