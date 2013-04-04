@@ -4,10 +4,13 @@
  */
 package com.bg.parser.helper;
 
+import com.bg.parser.db.MySql;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,6 +40,9 @@ public class NaturaUtils {
     /*!< All words in documents without repetitions */
     private SortedSet vocabulary;
     
+    /*!< Database Connection */
+    private MySql database;
+    
     /*!< Test Data */
     private String product = "Água de colônia:Fragrância com notas cítricas e "
             + "florais, com fundo sândalo vanila musc. Possui embalagem "
@@ -62,6 +68,7 @@ public class NaturaUtils {
         url = NaturaUtils.class.getResourceAsStream(NaturaGlobals.URL_STOPWORDS);
         stopwords  = new HashSet<>();
         vocabulary = new TreeSet<>();
+        database = MySql.getConnection();
     }
     
     /**
@@ -111,6 +118,13 @@ public class NaturaUtils {
     private void createVocabulary(String[] words) {
         for(int i = 0; i < words.length; ++i)
             vocabulary.add(words[i]);
+    }
+    
+    private void printVocabulary() {
+        for(Object word : vocabulary) {
+            System.out.print(word + " ");
+        }
+        System.out.println("\n");
     }
     
     /**
@@ -170,12 +184,25 @@ public class NaturaUtils {
        
         for(int w = 1; w < rows; w++) {
             double distance = 0.0;
-            for(int p = 0; p < columns; p++){
+            for(int p = 0; p < columns; p++) {
                 distance += Math.pow(vector[0][p] - vector[w][p], 2.0);
             }
             max[w - 1] = Math.sqrt(distance);
         }
         return max;
+    }
+    
+    /*
+     * print: Print the vector
+     */
+    private void print() {
+        for(int w = 0; w < rows; w++) {
+            System.out.println("");
+            for(int p = 0; p < columns; p++){
+                System.out.print(vector[w][p] + " ");
+            }
+        }
+        System.out.println("\n");
     }
     
     /**
@@ -199,10 +226,21 @@ public class NaturaUtils {
         countWords(temp);
         normalize();
         double[] dist = distance();
+        double min = Integer.MAX_VALUE;
+        int num = 0;
         
         for(int i = 0; i < dist.length; ++i) {
-            System.out.println(dist[i]);
+            if(min > dist[i]) {
+                min = dist[i];
+                num = i;
+            }
         }
+        System.out.println(num + " (" + min + ")");
+    }
+    
+    private void clear() {
+        stopwords.clear();
+        vocabulary.clear();
     }
     
     /**
@@ -210,10 +248,24 @@ public class NaturaUtils {
      */
     public void start() {
         List<String> textToCompare = new ArrayList();
-        textToCompare.add(product);
-        textToCompare.add(comment1);
-        textToCompare.add(comment2);
-        
-        compare(textToCompare);
+        textToCompare.add("free");
+        int productId = 0;
+        try {
+            ResultSet feeds = database.executeQuery("SELECT Message FROM Feeds");
+            while(feeds.next()) {
+                textToCompare.add(feeds.getString("Message"));
+            }
+            
+            ResultSet result = database.executeQuery("SELECT Description FROM Products");
+            while(result.next()) {
+                System.out.print(productId + " <- Similar -> ");
+                textToCompare.set(0, result.getString("Description"));
+                clear();
+                compare(textToCompare);
+                productId++;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(NaturaUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }
