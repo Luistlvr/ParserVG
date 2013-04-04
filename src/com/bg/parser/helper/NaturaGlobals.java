@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.bg.parser.html.helper;
+package com.bg.parser.helper;
 
 /**
  *
@@ -41,7 +41,7 @@ public class NaturaGlobals {
     public static final String fbSecretKey = "0b3efbfb0304e1f7f65b5ab0c429c26d";
     public static final String fbAppId = "231133880344940";
     
-    public static final int AMOUNT_OF_FEEDS    = 20;
+    public static final int AMOUNT_OF_FEEDS    = 10000;
     public static final int AMOUNT_OF_COMMENTS = 20;
     public static final int AMOUNT_OF_LIKES    = 20;
     public static final int AMOUNT_OF_FILTER   = 20;

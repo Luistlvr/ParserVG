@@ -6,7 +6,7 @@ package com.bg.parser.html;
 
 import com.bg.parser.base.Parser;
 import com.bg.parser.db.MySql;
-import com.bg.parser.html.helper.NaturaGlobals;
+import com.bg.parser.helper.NaturaGlobals;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;

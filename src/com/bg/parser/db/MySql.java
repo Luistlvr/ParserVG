@@ -5,7 +5,7 @@
 package com.bg.parser.db;
 
 import com.bg.parser.base.Database;
-import com.bg.parser.html.helper.NaturaGlobals;
+import com.bg.parser.helper.NaturaGlobals;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;

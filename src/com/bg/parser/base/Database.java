@@ -4,7 +4,7 @@
  */
 package com.bg.parser.base;
 
- import java.sql.*;
+import java.sql.*;
 
 /**
  *
