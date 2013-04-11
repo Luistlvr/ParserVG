@@ -71,9 +71,9 @@ public class NaturaUtils {
      */
     public NaturaUtils() {
         hm = new HashMap<>();
-        url = NaturaUtils.class.getResourceAsStream(NaturaGlobals.URL_STOPWORDS);
+        /*url = NaturaUtils.class.getResourceAsStream(NaturaGlobals.URL_STOPWORDS);
         stopwords  = new HashSet<>();
-        vocabulary = new TreeSet<>();
+        vocabulary = new TreeSet<>();*/
         database = MySql.getConnection();
     }
     
