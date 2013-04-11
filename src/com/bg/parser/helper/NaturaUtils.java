@@ -262,6 +262,9 @@ public class NaturaUtils {
         System.out.println(num + " (" + min + ")");
     }
     
+    /**
+     * clear: clear the stopwords and vocabulary
+     */
     private void clear() {
         stopwords.clear();
         vocabulary.clear();
@@ -293,6 +296,9 @@ public class NaturaUtils {
         }
     }
     
+    /**
+     * amountOfLikes: Gets the amount of likes per user on the database
+     */
     public void amountOfLikes() {
         try {
             ResultSet likes = database.executeQuery("SELECT Name, count(*) as Cantidad FROM Natura.Likes GROUP BY Name ORDER BY Cantidad DESC;");
@@ -311,6 +317,9 @@ public class NaturaUtils {
         }
     }
     
+    /**
+     * amountOfComments: Gets the amount of comments per user on the database
+     */
     public void amountOfComments() {
         try {
             ResultSet likes = database.executeQuery("SELECT Name, count(*) as Cantidad FROM Natura.Comments GROUP BY Name ORDER BY Cantidad DESC;");
@@ -329,6 +338,9 @@ public class NaturaUtils {
         }
     }
     
+    /**
+     * getTotal: Gets the total of likes plus comments of each user
+     */
     public void getTotal() {
         Iterator it = hm.keySet().iterator();
         
@@ -340,6 +352,9 @@ public class NaturaUtils {
         }
     }
     
+    /**
+     * parseDBToJason: Transform the database to jason
+     */
     public void parseDBToJason() {
         JSONObject parsedData = new JSONObject();
         try {
