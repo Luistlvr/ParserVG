@@ -18,10 +18,12 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        /*FacebookParser test = new FacebookParser();
-        test.parse();*/
+        FacebookParser test = new FacebookParser();
+        test.parse();
         
-        NaturaUtils test = new NaturaUtils();
-        test.start();
+        /*NaturaUtils test = new NaturaUtils();
+        test.amountOfLikes();
+        test.amountOfComments();
+        test.getTotal();*/
     }
 }

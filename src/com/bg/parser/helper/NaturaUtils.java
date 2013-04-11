@@ -14,12 +14,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  *
@@ -30,6 +34,7 @@ public class NaturaUtils {
     private double[][] vector;
     private static int rows;
     private static int columns;
+    HashMap<String, Integer> hm; 
     
     /*!< Url of the stopwords document */
     private InputStream url;
@@ -65,6 +70,7 @@ public class NaturaUtils {
      * NaturaUtils: Constructor to initialize the global variables
      */
     public NaturaUtils() {
+        hm = new HashMap<>();
         url = NaturaUtils.class.getResourceAsStream(NaturaGlobals.URL_STOPWORDS);
         stopwords  = new HashSet<>();
         vocabulary = new TreeSet<>();
@@ -282,6 +288,98 @@ public class NaturaUtils {
                 compare(textToCompare);
                 productId++;
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(NaturaUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void amountOfLikes() {
+        try {
+            ResultSet likes = database.executeQuery("SELECT Name, count(*) as Cantidad FROM Natura.Likes GROUP BY Name ORDER BY Cantidad DESC;");
+            while(likes.next()) {
+                //System.out.println(likes.getString("Name") + ": " + likes.getString("Cantidad"));
+                String key = likes.getString("Name");
+                if(hm.containsKey(key)) {
+                    int temp = likes.getInt("Cantidad") + hm.get(key);
+                    hm.put(likes.getString("Name"), temp);
+                }
+                else 
+                    hm.put(likes.getString("Name"), likes.getInt("Cantidad"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(NaturaUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void amountOfComments() {
+        try {
+            ResultSet likes = database.executeQuery("SELECT Name, count(*) as Cantidad FROM Natura.Comments GROUP BY Name ORDER BY Cantidad DESC;");
+            while(likes.next()) {
+                //System.out.println(likes.getString("Name") + ": " + likes.getString("Cantidad"));
+                String key = likes.getString("Name");
+                if(hm.containsKey(key)) {
+                    int temp = likes.getInt("Cantidad") + hm.get(key);
+                    hm.put(likes.getString("Name"), temp);
+                }
+                else 
+                    hm.put(likes.getString("Name"), likes.getInt("Cantidad"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(NaturaUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void getTotal() {
+        Iterator it = hm.keySet().iterator();
+        
+        while(it.hasNext()) {
+            String key = it.next().toString();  
+            String value = hm.get(key).toString();  
+
+            System.out.println(key + ": " + value);
+        }
+    }
+    
+    public void parseDBToJason() {
+        JSONObject parsedData = new JSONObject();
+        try {
+            JSONArray feedsData = new JSONArray();
+            ResultSet feeds = database.executeQuery("SELECT * FROM Feeds;");
+            while(feeds.next()) {
+                JSONObject feedData = new JSONObject();
+                String idFeed = feeds.getString("idFeeds");
+                feedData.put("id", feeds.getString("Id"));
+                feedData.put("message", feeds.getString("Message"));
+                feedData.put("category", feeds.getString("Category"));
+                feedData.put("likes", feeds.getString("Likes"));
+                feedData.put("shares", feeds.getString("Shares"));
+                feedData.put("comments", feeds.getString("Comments"));
+                
+                JSONArray commentsData = new JSONArray();
+                ResultSet comments = database.executeQuery("SELECT * FROM Comments WHERE idFeed = " + idFeed + ";");
+                while(comments.next()) {
+                    JSONObject commentData = new JSONObject();
+                    commentData.put("id", comments.getString("Id"));
+                    commentData.put("name", comments.getString("Name"));
+                    commentData.put("message", comments.getString("Message"));
+                    commentData.put("likes", comments.getString("Likes"));
+                    commentsData.add(commentData);;
+                }
+                feedData.put("comments_list", commentsData);
+                
+                JSONArray likesData = new JSONArray();
+                ResultSet likes = database.executeQuery("SELECT * FROM Likes WHERE idFeed = " + idFeed + ";");
+                while(likes.next()) {
+                    JSONObject likeData = new JSONObject();
+                    likeData.put("id", likes.getString("Id"));
+                    likeData.put("name", likes.getString("Name"));
+                    likesData.add(likeData);
+                }
+                feedData.put("likes_list", likesData);
+                feedsData.add(feedData);
+            }
+            parsedData.put("data", feedsData);
+            System.out.println(parsedData.toString());
         } catch (SQLException ex) {
             Logger.getLogger(NaturaUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
